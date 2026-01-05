@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 12:51:24 by capapes           #+#    #+#             */
-/*   Updated: 2025/11/25 13:10:39 by capapes          ###   ########.fr       */
+/*   Updated: 2025/12/05 10:45:20 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ class Bureaucrat {
 	public:
 		// Orthodox canonical form
 		Bureaucrat(const std::string &name, int grade);	
-		~Bureaucrat() = default;
-		Bureaucrat(const Bureaucrat &other) = default;
-		Bureaucrat &operator=(const Bureaucrat &other) = default;
+		~Bureaucrat();
+		Bureaucrat(const Bureaucrat &other);
+		Bureaucrat &operator=(const Bureaucrat &other);
 
 		// Methods
 		const std::string 	&getName() const;
@@ -31,11 +31,11 @@ class Bureaucrat {
 
 		class GradeTooHighException : public std::exception {
 			public:
-				const char *what() const noexcept override;
+				virtual const char* what() const throw();
 		};
 		class GradeTooLowException : public std::exception {
 			public:
-				const char *what() const noexcept override;
+				virtual const char* what() const throw();
 		};
 
 	private:
@@ -45,7 +45,7 @@ class Bureaucrat {
 		static const int 	_maxGrade = 150;
 
 		// Methods
-		void 				validateGrade(int grade) const;
+		void 				_validateGrade(int grade) const;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const Bureaucrat &bureaucrat) {

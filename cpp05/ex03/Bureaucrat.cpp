@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/11 14:16:26 by capapes           #+#    #+#             */
-/*   Updated: 2025/07/11 14:16:42 by capapes          ###   ########.fr       */
+/*   Created: 2025/11/25 12:55:52 by capapes           #+#    #+#             */
+/*   Updated: 2025/12/05 10:23:27 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 inline Bureaucrat::Bureaucrat(const std::string &name, int grade)
 	: _name(name), _grade(grade) {
-	validateGrade(grade);
-}
+		validateGrade(grade);
+	}
 
 inline const std::string &Bureaucrat::getName() const {
 	return _name;
@@ -23,19 +23,6 @@ inline const std::string &Bureaucrat::getName() const {
 
 inline int Bureaucrat::getGrade() const {
 	return _grade;
-}
-
-inline void Bureaucrat::incrementGrade() {
-	if (_grade <= _minGrade) {
-		throw GradeTooHighException();
-	}
-	--_grade;
-}
-inline void Bureaucrat::decrementGrade() {
-	if (_grade >= _maxGrade) {
-		throw GradeTooLowException();
-	}
-	++_grade;
 }
 
 inline void Bureaucrat::validateGrade(int grade) const {
@@ -46,7 +33,32 @@ inline void Bureaucrat::validateGrade(int grade) const {
 	}
 }
 
-inline std::ostream &operator<<(std::ostream &os, const Bureaucrat &bureaucrat) {
-	os << bureaucrat.getName() << ", bureaucrat grade " << bureaucrat.getGrade();
-	return os;
+inline void Bureaucrat::incrementGrade() {
+	validateGrade(_grade - 1);
+	--_grade;
+}
+
+inline void Bureaucrat::decrementGrade() {
+	validateGrade(_grade + 1);
+	++_grade;
+}
+
+const char *Bureaucrat::GradeTooHighException::what() const noexcept
+{
+    return "Grade too high!";
+}
+
+const char *Bureaucrat::GradeTooLowException::what() const noexcept
+{
+    return "Grade too low!";
+}
+
+void Bureaucrat::signForm(AForm& form) const {
+	try {
+		form.beSigned(*this);
+		std::cout << _name << " signed " << form.getName() << std::endl;
+	} catch (const std::exception &e) {
+		std::cout << _name << " couldn't sign " << form.getName()
+				  << " because " << e.what() << std::endl;
+	}
 }
