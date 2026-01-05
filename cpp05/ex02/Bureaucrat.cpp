@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 12:55:52 by capapes           #+#    #+#             */
-/*   Updated: 2025/12/04 16:38:10 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/05 18:41:39 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@ inline Bureaucrat::Bureaucrat(const std::string &name, int grade)
 	: _name(name), _grade(grade) {
 		_validateGrade(grade);
 	}
+
+Bureaucrat::Bureaucrat() : _name("Default"), _grade(150) {
+}
+
 
 inline const std::string &Bureaucrat::getName() const {
 	return _name;

@@ -1,19 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   AForm.hpp                                          :+:      :+:    :+:   */
+/*   Bureaucrat.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/25 15:43:54 by capapes           #+#    #+#             */
-/*   Updated: 2025/12/05 10:24:18 by capapes          ###   ########.fr       */
+/*   Created: 2025/11/25 12:51:24 by capapes           #+#    #+#             */
+/*   Updated: 2026/01/05 20:31:31 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+
 #include <iostream>
 #include <stdexcept>
-#include "Bureaucrat.hpp"
+#include "Form.hpp"
 
 // General instructions
 // - [ ] Compile with C++ and the flags -Wall -Wextra -Werror
@@ -53,54 +54,9 @@
 // - [ ] If the grade is too low, throw an exception
 // - [ ] Implement the method singForm that takes a Bureaucrat and attempts to sign the form, printing appropriate messages
 
-class AForm
-{
-	private:
-	const std::string 	_name;
-	bool 				_isSigned = false;
-	int const 			_gradeToSign;
-	int const 			_gradeToExecute;
-	
-	protected:
-	class GradeTooHighException : public std::exception {
-		public:
-		const char *what() const noexcept override;
-	};
-	class GradeTooLowException : public std::exception {
-		public:
-		const char *what() const noexcept override;
-	};
-	
-	public:
-	// Orthodox canonical form
-	AForm();
-	AForm(std::string name, int gradeToSign, int gradeToExecute);
-	AForm(const AForm& other);
-	AForm& operator=(const AForm& other);
-	~AForm();
-	const std::string& getName() const { return _name; }
-	bool getIsSigned() const { return _isSigned; }
-	void beSigned(Bureaucrat& bureaucrat);
-	void execute(Bureaucrat const &executor) const;   // public final behavior
-
-protected:
-    virtual void performAction() const = 0;   
-};
-
-inline std::ostream &operator<<(std::ostream &os, const AForm &form) {
-	os << "Form Name: " << form.getName() 
-	<< ", Signed: " << (form.getIsSigned() ? "Yes" : "No");
-	return os;
-}
-
-
-
-
-
-
 // Exercise 02 requirements
-// - [ ] Class form must be renamed AForm and become an abstract base class
-// - [ ] All attributes of AForm must remain private and belong to the base class
+// - [x] Class form must be renamed AForm and become an abstract base class
+// - [x] All attributes of AForm must remain private and belong to the base class
 // - [ ] Create the following concrete classes that inherit from AForm:
 //   • ShrubberyCreationForm: Required grades: sign 145, exec 137
 //     Creates a file <target>_shrubbery in the working directory and writes ASCII trees inside it.
@@ -113,17 +69,47 @@ inline std::ostream &operator<<(std::ostream &os, const AForm &form) {
 //   and that the grade of the bureaucrat attempting to execute the form is high enough. Otherwise, throw an appropriate exception.
 // - [ ] Add the executeForm(AForm const & form) const member function to the Bureaucrat class. It must attempt to execute the form. If successful, print something like:
 
-// Exercise 03 requirements
+
+
+class Bureaucrat {
+public:
+	// Orthodox canonical form
+	Bureaucrat();
+	~Bureaucrat() = default;
+	Bureaucrat(const Bureaucrat &other) = default;
+	Bureaucrat &operator=(const Bureaucrat &other) = default;
+
+	// Other
+	Bureaucrat(const std::string &name, int grade);	
 	
-// 	Since filling out forms all day would be too cruel for our bureaucrats, interns exist to
-// take on this tedious task. In this exercise, you must implement the Intern class. The
-// intern has no name, no grade, and no unique characteristics. The only thing bureaucrats
-// care about is that they do their job.
-// However, the intern has one key ability: the makeForm() function. This function
-// takes two strings as parameters: the first one represents the name of a form, and the
-// second one represents the target of the form. It returns a pointer to a AForm object
-// (corresponding to the form name passed as a parameter), with its target initialized to
-// the second parameter.
-// It should print something like:
-// Intern creates <form>
-// If the provided form name does not exist, print an explicit error message.
+	const std::string 	&getName() const;
+	int 				getGrade() const;
+	void				incrementGrade();
+	void				decrementGrade();
+
+	// 
+	class GradeTooHighException : public std::exception {
+		public:
+			const char *what() const noexcept override;
+	};
+	class GradeTooLowException : public std::exception {
+		public:
+			const char *what() const noexcept override;
+	};
+
+	void signForm(Form& form) const;
+
+private:
+	const std::string 	_name;
+	int 				_grade;
+	static const int 	_minGrade = 1;
+	static const int 	_maxGrade = 150;
+
+	// Methods
+	void 				_validateGrade(int grade) const;
+};
+
+inline std::ostream &operator<<(std::ostream &os, const Bureaucrat &bureaucrat) {
+	os << bureaucrat.getName() << ", bureaucrat grade " << bureaucrat.getGrade();
+	return os;
+}

@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 12:51:24 by capapes           #+#    #+#             */
-/*   Updated: 2025/12/05 10:45:20 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/05 18:37:24 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,13 @@
 class Bureaucrat {
 	public:
 		// Orthodox canonical form
-		Bureaucrat(const std::string &name, int grade);	
+		Bureaucrat();
 		~Bureaucrat();
 		Bureaucrat(const Bureaucrat &other);
 		Bureaucrat &operator=(const Bureaucrat &other);
 
+		Bureaucrat(const std::string &name, int grade);	
+	
 		// Methods
 		const std::string 	&getName() const;
 		int 				getGrade() const;

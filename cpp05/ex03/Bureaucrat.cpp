@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 12:55:52 by capapes           #+#    #+#             */
-/*   Updated: 2025/12/05 10:23:27 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/05 18:41:39 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,12 @@
 
 inline Bureaucrat::Bureaucrat(const std::string &name, int grade)
 	: _name(name), _grade(grade) {
-		validateGrade(grade);
+		_validateGrade(grade);
 	}
+
+Bureaucrat::Bureaucrat() : _name("Default"), _grade(150) {
+}
+
 
 inline const std::string &Bureaucrat::getName() const {
 	return _name;
@@ -25,7 +29,7 @@ inline int Bureaucrat::getGrade() const {
 	return _grade;
 }
 
-inline void Bureaucrat::validateGrade(int grade) const {
+inline void Bureaucrat::_validateGrade(int grade) const {
 	if (grade < _minGrade) {
 		throw GradeTooHighException();
 	} else if (grade > _maxGrade) {
@@ -34,12 +38,12 @@ inline void Bureaucrat::validateGrade(int grade) const {
 }
 
 inline void Bureaucrat::incrementGrade() {
-	validateGrade(_grade - 1);
+	_validateGrade(_grade - 1);
 	--_grade;
 }
 
 inline void Bureaucrat::decrementGrade() {
-	validateGrade(_grade + 1);
+	_validateGrade(_grade + 1);
 	++_grade;
 }
 
@@ -53,7 +57,7 @@ const char *Bureaucrat::GradeTooLowException::what() const noexcept
     return "Grade too low!";
 }
 
-void Bureaucrat::signForm(AForm& form) const {
+void Bureaucrat::signForm(Form& form) const {
 	try {
 		form.beSigned(*this);
 		std::cout << _name << " signed " << form.getName() << std::endl;

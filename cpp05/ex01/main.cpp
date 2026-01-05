@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 15:30:56 by capapes           #+#    #+#             */
-/*   Updated: 2025/12/05 10:58:34 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/05 19:08:57 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,22 +54,19 @@
 
 int main() {
 	try {
-		Bureaucrat bob("Bob", 2);
+		Bureaucrat bob("Bob", 6);
 		Form taxForm("Tax Form", 5, 10);
 
-		std::cout << bob.getName() << ", bureaucrat grade " << bob.getGrade() << std::endl;
-		std::cout << taxForm.getName() << ", form signed: " << (taxForm.getIsSigned() ? "yes" : "no") 
-		          << ", grade required to sign: " << taxForm.getGradeToSign() 
-		          << ", grade required to execute: " << taxForm.getGradeToExecute() << std::endl;
+		std::cout << bob << std::endl;
+		std::cout << taxForm << std::endl;
 
 		bob.signForm(taxForm);
-		std::cout << "After signing attempt: " << taxForm.getName() << ", form signed: " 
-		          << (taxForm.getIsSigned() ? "yes" : "no") << std::endl;
+		std::cout << "After signing attempt: \n" << taxForm << "\n"<< std::endl;
 
 		bob.incrementGrade();
+		std::cout << bob << std::endl;
 		bob.signForm(taxForm);
-		std::cout << "After second signing attempt: " << taxForm.getName() << ", form signed: " 
-		          << (taxForm.getIsSigned() ? "yes" : "no") << std::endl;
+		std::cout << "After second signing attempt: " << taxForm << std::endl;
 	}
 	catch (const std::exception &e) {
 		std::cerr << "Exception: " << e.what() << std::endl;

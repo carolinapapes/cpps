@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 15:43:54 by capapes           #+#    #+#             */
-/*   Updated: 2025/12/05 10:53:34 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/05 19:10:19 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@
 // Exercise 01 requirements
 // - [ ] Same as ex00
 // - [ ] Create a Form class
-// - [ ] Form has a const name
-// - [ ] A boolean indicating if it's signed
-// - [ ] A constant grade required to execute
-// - [ ] All attributes must be private not protected
-// - [ ] Grades have the same restrictions as in Bureaucrat
-// - [ ] Implement beSigned method that takes a Bureaucrat and signs the form if the Bureaucrat's grade is high enough
+// - [x] Form has a const name
+// - [x] A boolean indicating if it's signed
+// - [x] A constant grade required to execute
+// - [x] All attributes must be private not protected
+// - [x] Grades have the same restrictions as in Bureaucrat
+// - [x] Implement beSigned method that takes a Bureaucrat and signs the form if the Bureaucrat's grade is high enough
 // - [ ] If the grade is too low, throw an exception
 // - [ ] Implement the method singForm that takes a Bureaucrat and attempts to sign the form, printing appropriate messages
 
@@ -79,16 +79,19 @@ public:
 	Form& operator=(const Form& other);
 	~Form();
 
-	const std::string& 	getName() const;
-	bool				getIsSigned() const;
-	int 				getGradeToSign() const;
+	const std::string& 	getName() 			const;
+	bool				getIsSigned() 		const;
+	int 				getGradeToSign() 	const;
 	int 				getGradeToExecute() const;
 	void				beSigned(const Bureaucrat& bureaucrat);
 
 };
 
 inline std::ostream &operator<<(std::ostream &os, const Form &form) {
-	os << "Form Name: " << form.getName() 
-	   << ", Signed: " << (form.getIsSigned() ? "Yes" : "No");
+	os << "Form data: " 
+	   << "\n\tName: " << form.getName() 
+	   << "\n\tGrade to sign: " << form.getGradeToSign()
+	   << "\n\tGrade to execute: " << form.getGradeToExecute()
+	   << "\n\tSigned: " << (form.getIsSigned() ? "Yes" : "No");
 	return os;
 }

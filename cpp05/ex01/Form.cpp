@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 15:56:25 by capapes           #+#    #+#             */
-/*   Updated: 2025/12/05 10:57:25 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/05 20:23:31 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,10 @@ Form::Form(std::string name, int gradeToSign, int gradeToExecute)
 }
 
 Form::Form(const Form& other)
-	: _name(other._name), _isSigned(other._isSigned),
-	  _gradeToSign(other._gradeToSign), _gradeToExecute(other._gradeToExecute) {}
+	: _name(other.getName()), _isSigned(other.getIsSigned()),
+	  _gradeToSign(other.getGradeToSign()), _gradeToExecute(other.getGradeToExecute()) {}
 
+//TODO: REVISAR
 Form& Form::operator=(const Form& other) {
 	if (this != &other) {
 		this->_isSigned = other._isSigned;

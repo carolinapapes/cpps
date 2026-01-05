@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 12:51:24 by capapes           #+#    #+#             */
-/*   Updated: 2025/12/05 10:23:58 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/05 20:31:31 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include <iostream>
 #include <stdexcept>
-#include "AForm.hpp"
+#include "Form.hpp"
 
 // General instructions
 // - [ ] Compile with C++ and the flags -Wall -Wextra -Werror
@@ -55,8 +55,8 @@
 // - [ ] Implement the method singForm that takes a Bureaucrat and attempts to sign the form, printing appropriate messages
 
 // Exercise 02 requirements
-// - [ ] Class form must be renamed AForm and become an abstract base class
-// - [ ] All attributes of AForm must remain private and belong to the base class
+// - [x] Class form must be renamed AForm and become an abstract base class
+// - [x] All attributes of AForm must remain private and belong to the base class
 // - [ ] Create the following concrete classes that inherit from AForm:
 //   • ShrubberyCreationForm: Required grades: sign 145, exec 137
 //     Creates a file <target>_shrubbery in the working directory and writes ASCII trees inside it.
@@ -72,37 +72,41 @@
 
 
 class Bureaucrat {
-	public:
-		// Orthodox canonical form
-		Bureaucrat(const std::string &name, int grade);	
-		~Bureaucrat() = default;
-		Bureaucrat(const Bureaucrat &other) = default;
-		Bureaucrat &operator=(const Bureaucrat &other) = default;
+public:
+	// Orthodox canonical form
+	Bureaucrat();
+	~Bureaucrat() = default;
+	Bureaucrat(const Bureaucrat &other) = default;
+	Bureaucrat &operator=(const Bureaucrat &other) = default;
 
-		// Methods
-		const std::string 	&getName() const;
-		int 				getGrade() const;
-		void				incrementGrade();
-		void				decrementGrade();
+	// Other
+	Bureaucrat(const std::string &name, int grade);	
+	
+	const std::string 	&getName() const;
+	int 				getGrade() const;
+	void				incrementGrade();
+	void				decrementGrade();
 
-		class GradeTooHighException : public std::exception {
-			public:
-				const char *what() const noexcept override;
-		};
-		class GradeTooLowException : public std::exception {
-			public:
-				const char *what() const noexcept override;
-		};
+	// 
+	class GradeTooHighException : public std::exception {
+		public:
+			const char *what() const noexcept override;
+	};
+	class GradeTooLowException : public std::exception {
+		public:
+			const char *what() const noexcept override;
+	};
 
-		void signForm(const AForm& form) const;
-	private:
-		const std::string 	_name;
-		int 				_grade;
-		static const int 	_minGrade = 1;
-		static const int 	_maxGrade = 150;
+	void signForm(Form& form) const;
 
-		// Methods
-		void 				validateGrade(int grade) const;
+private:
+	const std::string 	_name;
+	int 				_grade;
+	static const int 	_minGrade = 1;
+	static const int 	_maxGrade = 150;
+
+	// Methods
+	void 				_validateGrade(int grade) const;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const Bureaucrat &bureaucrat) {
