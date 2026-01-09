@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 16:25:15 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/07 16:48:37 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/09 17:02:44 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,11 @@ struct TypeRule {
 
 typedef double (*ConvertFn)(std::string const &, bool &ok);
 typedef void (*PrintFn)(double);
+
+#define MINCHAR  static_cast<double>(std::numeric_limits<char>::min())
+#define MAXCHAR  static_cast<double>(std::numeric_limits<char>::max())
+#define MININT   static_cast<double>(std::numeric_limits<int>::min())
+#define MAXINT   static_cast<double>(std::numeric_limits<int>::max())
 
 // ===================== Low-level helpers =====================
 
@@ -92,7 +97,6 @@ static bool match_pseudo_double(std::string const &s) {
 }
 
 static bool match_char(std::string const &s) {
-	// Accept both: 'a' and single non-digit like a
 	if (s.size() == 3 && s[0] == '\'' && s[2] == '\'')
 		return true;
 	if (s.size() == 1 && !std::isdigit(static_cast<unsigned char>(s[0])))
@@ -117,7 +121,7 @@ static bool match_double(std::string const &s) {
 	return parse_double(s, tmp);
 }
 
-// Table-driven detection: first match wins (order matters)
+// ===================== Type detection =====================
 static LiteralType detect_type(std::string const &s) {
 	static TypeRule const rules[] = {
 		{ &match_pseudo_float,  TYPE_PSEUDO_FLOAT  },
@@ -178,13 +182,13 @@ static double conv_double(std::string const &s, bool &ok) {
 
 static double to_value(std::string const &literal, LiteralType type, bool &ok) {
 	static ConvertFn const converters[TYPE_COUNT] = {
-		&conv_char,    // TYPE_CHAR
-		&conv_int,     // TYPE_INT
-		&conv_float,   // TYPE_FLOAT
-		&conv_double,  // TYPE_DOUBLE
-		&conv_pseudo,  // TYPE_PSEUDO_FLOAT
-		&conv_pseudo,  // TYPE_PSEUDO_DOUBLE
-		&conv_invalid  // TYPE_INVALID
+		&conv_char,
+		&conv_int,
+		&conv_float,
+		&conv_double,
+		&conv_pseudo,
+		&conv_pseudo,
+		&conv_invalid
 	};
 
 	size_t idx = static_cast<size_t>(type);
@@ -201,105 +205,105 @@ struct SpecialStrings {
 };
 
 static SpecialStrings const g_special_strs[SK_COUNT] = {
-	{ 0,      0      },   // SK_NONE (unused)
-	{ "nan",  "nanf"  },   // SK_NAN
-	{ "+inf", "+inff" },   // SK_POS_INF
-	{ "-inf", "-inff" }    // SK_NEG_INF
+	{ 0,      0      },
+	{ "nan",  "nanf"  },
+	{ "+inf", "+inff" },
+	{ "-inf", "-inff" }
 };
+
+static void print_sk(double x, int type) {
+	switch (type) {
+		case TYPE_CHAR:
+		case TYPE_INT:
+			std::cout << "impossible\n";
+			break;
+		case TYPE_FLOAT:
+			std::cout << g_special_strs[special_kind(x)].flt << "\n";
+			break;
+		case TYPE_DOUBLE:
+			std::cout << g_special_strs[special_kind(x)].dbl << "\n";
+			break;
+	}
+}
 
 // ===================== Printers (double -> output) =====================
 
-static void print_char(double x) {
-	std::cout << "char: ";
-
-	if (special_kind(x) != SK_NONE) {
-		std::cout << "impossible\n";
-		return;
-	}
-
-	double cmin = static_cast<double>(std::numeric_limits<char>::min());
-	double cmax = static_cast<double>(std::numeric_limits<char>::max());
-	if (x < cmin || x > cmax) {
+static void print_char(double x){
+	if ( x < MINCHAR || x > MAXCHAR ) {
 		std::cout << "impossible\n";
 		return;
 	}
 
 	char c = static_cast<char>(x);
-	if (!std::isprint(static_cast<unsigned char>(c))) {
-		std::cout << "Non displayable\n";
-		return;
-	}
-	std::cout << "'" << c << "'\n";
+	!std::isprint(static_cast<unsigned char>(c)) ? 
+		std::cout << "Non displayable\n" :
+		std::cout << "'" << c << "'\n";
 }
 
-static void print_int(double x) {
-	std::cout << "int: ";
-
-	if (special_kind(x) != SK_NONE) {
+static void print_int(double x){
+	if ( x < MININT || x > MAXINT ) {
 		std::cout << "impossible\n";
 		return;
 	}
-
-	double imin = static_cast<double>(std::numeric_limits<int>::min());
-	double imax = static_cast<double>(std::numeric_limits<int>::max());
-	if (x < imin || x > imax) {
-		std::cout << "impossible\n";
-		return;
-	}
-
 	std::cout << static_cast<int>(x) << "\n";
 }
 
-static void print_float(double x) {
-	std::cout << "float: ";
+static void print_double(double x){
+	std::ios::fmtflags oldFlags = std::cout.flags();
+	std::streamsize    oldPrec  = std::cout.precision();
 
-	SpecialKind sk = special_kind(x);
-	if (sk != SK_NONE) {
-		std::cout << g_special_strs[sk].flt << "\n";
-		return;
-	}
+	if (is_integral(x))
+		std::cout << std::fixed << std::setprecision(1) << x << "\n";
+	else
+		std::cout << x << "\n";
+
+	std::cout.flags(oldFlags);
+	std::cout.precision(oldPrec);
+}
+
+static void print_float(double x){
+	std::ios::fmtflags oldFlags = std::cout.flags();
+	std::streamsize    oldPrec  = std::cout.precision();
 
 	float f = static_cast<float>(x);
 
-	if (is_integral(x)) {
+	if (is_integral(x))
+	{
 		std::cout << std::fixed << std::setprecision(1) << f << "f\n";
-	} else {
-		// Avoid forcing fixed formatting for non-integers
+	}
+	else
+	{
 		std::cout.unsetf(std::ios::floatfield);
 		std::cout << f << "f\n";
 	}
+
+	std::cout.flags(oldFlags);
+	std::cout.precision(oldPrec);
 }
 
-static void print_double(double x) {
-	std::cout << "double: ";
-
-	SpecialKind sk = special_kind(x);
-	if (sk != SK_NONE) {
-		std::cout << g_special_strs[sk].dbl << "\n";
-		return;
-	}
-
-	if (is_integral(x)) {
-		std::cout << std::fixed << std::setprecision(1) << x << "\n";
-	} else {
-		std::cout.unsetf(std::ios::floatfield);
-		std::cout << x << "\n";
-	}
+// ==================== High-level printers =====================
+static void printer(char const *type_name, int type, double x, PrintFn print_type) {
+	std::cout << type_name << ": ";
+	special_kind(x) != SK_NONE ?
+		print_sk(x, type) :
+		print_type(x);
 }
 
 static void print_all(double value) {
-	static PrintFn const printers[] = {
-		&print_char,
-		&print_int,
-		&print_float,
-		&print_double
-	};
-
-	for (size_t i = 0; i < sizeof(printers) / sizeof(printers[0]); ++i)
-		printers[i](value);
+	printer("char", TYPE_CHAR, value, print_char);
+	printer("int", TYPE_INT, value, print_int);
+	printer("float", TYPE_FLOAT, value, print_float);
+	printer("double", TYPE_DOUBLE, value, print_double);
 }
 
-// ===================== ScalarConverter boilerplate =====================
+static void print_none() {
+	std::cout << "char: impossible\n";
+	std::cout << "int: impossible\n";
+	std::cout << "float: impossible\n";
+	std::cout << "double: impossible\n";
+}
+
+// ===================== ScalarConverter orthodox canonical form =====================
 
 ScalarConverter::ScalarConverter() {}
 ScalarConverter::~ScalarConverter() {}
@@ -314,13 +318,6 @@ void ScalarConverter::convert(std::string const &literal) {
 	bool ok = false;
 	double value = to_value(literal, type, ok);
 
-	if (!ok) {
-		std::cout << "char: impossible\n";
-		std::cout << "int: impossible\n";
-		std::cout << "float: impossible\n";
-		std::cout << "double: impossible\n";
-		return;
-	}
+	!ok ? print_none() : print_all(value);
 
-	print_all(value);
 }

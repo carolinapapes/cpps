@@ -1,29 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ScalarConverter.hpp                                :+:      :+:    :+:   */
+/*   whatever.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/04 16:25:18 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/07 16:20:44 by capapes          ###   ########.fr       */
+/*   Created: 2026/01/09 15:47:56 by capapes           #+#    #+#             */
+/*   Updated: 2026/01/09 15:51:07 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SCALARCONVERTER_HPP
-#define SCALARCONVERTER_HPP
+#pragma once
 
-#include <string>
+template <typename T>
+void swap(T &a, T &b)
+{
+	T tmp = a;
+	a = b;
+	b = tmp;
+}
 
-class ScalarConverter {
-public:
-	static void convert(std::string const &literal);
+template <typename T>
+T const &min(T const &a, T const &b)
+{
+	return (b <= a ? b : a);
+}
 
-private:
-	ScalarConverter();
-	ScalarConverter(ScalarConverter const &);
-	ScalarConverter &operator=(ScalarConverter const &);
-	~ScalarConverter();
-};
-
-#endif
+template <typename T>
+T const &max(T const &a, T const &b)
+{
+	return (b >= a ? b : a);
+}
