@@ -6,54 +6,77 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 12:55:52 by capapes           #+#    #+#             */
-/*   Updated: 2025/12/05 10:23:27 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/06 16:57:34 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
+#include "AForm.hpp"
 
-inline Bureaucrat::Bureaucrat(const std::string &name, int grade)
-	: _name(name), _grade(grade) {
-		validateGrade(grade);
+// ========================================================
+// Orthodox canonical form
+// ========================================================
+
+Bureaucrat::Bureaucrat() : _name("Default"), _grade(150) {}
+
+Bureaucrat::Bureaucrat(const Bureaucrat &other)
+	: _name(other._name), _grade(other._grade) {}
+
+Bureaucrat &Bureaucrat::operator=(const Bureaucrat &other)
+{
+	if (this != &other) {
+		_grade = other._grade;
 	}
+	return *this;
+}
 
-inline const std::string &Bureaucrat::getName() const {
+Bureaucrat::~Bureaucrat() {}
+
+
+// ========================================================
+// Specific constructor
+// ========================================================
+
+Bureaucrat::Bureaucrat(const std::string &name, int grade)
+	: _name(name), _grade(grade)
+{
+		_validateGrade(grade);
+}
+
+
+// ========================================================
+// Getters
+// ========================================================
+
+const std::string &Bureaucrat::getName() const
+{
 	return _name;
 }
 
-inline int Bureaucrat::getGrade() const {
+int Bureaucrat::getGrade() const
+{
 	return _grade;
 }
 
-inline void Bureaucrat::validateGrade(int grade) const {
-	if (grade < _minGrade) {
-		throw GradeTooHighException();
-	} else if (grade > _maxGrade) {
-		throw GradeTooLowException();
-	}
-}
 
-inline void Bureaucrat::incrementGrade() {
-	validateGrade(_grade - 1);
+// ========================================================
+// Methods
+// ========================================================
+
+void Bureaucrat::incrementGrade()
+{
+	_validateGrade(_grade - 1);
 	--_grade;
 }
 
-inline void Bureaucrat::decrementGrade() {
-	validateGrade(_grade + 1);
+void Bureaucrat::decrementGrade()
+{
+	_validateGrade(_grade + 1);
 	++_grade;
 }
 
-const char *Bureaucrat::GradeTooHighException::what() const noexcept
+void Bureaucrat::signForm(AForm& form) const
 {
-    return "Grade too high!";
-}
-
-const char *Bureaucrat::GradeTooLowException::what() const noexcept
-{
-    return "Grade too low!";
-}
-
-void Bureaucrat::signForm(AForm& form) const {
 	try {
 		form.beSigned(*this);
 		std::cout << _name << " signed " << form.getName() << std::endl;
@@ -61,4 +84,44 @@ void Bureaucrat::signForm(AForm& form) const {
 		std::cout << _name << " couldn't sign " << form.getName()
 				  << " because " << e.what() << std::endl;
 	}
+}
+
+
+// ========================================================
+// Exceptions
+// ========================================================
+
+const char *Bureaucrat::GradeTooHighException::what() const throw()
+{
+    return "Grade too high!";
+}
+
+const char *Bureaucrat::GradeTooLowException::what() const throw()
+{
+    return "Grade too low!";
+}
+
+
+// ========================================================
+// Pivate methods
+// ========================================================
+
+void Bureaucrat::_validateGrade(int grade) const
+{
+	if (grade < _minGrade) {
+		throw GradeTooHighException();
+	} else if (grade > _maxGrade) {
+		throw GradeTooLowException();
+	}
+}
+
+
+// ========================================================
+// Stream output
+// ========================================================
+
+std::ostream &operator<<(std::ostream &os, const Bureaucrat &bureaucrat)
+{
+	os << bureaucrat.getName() << ", bureaucrat grade " << bureaucrat.getGrade();
+	return os;
 }

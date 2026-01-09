@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 12:51:24 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/06 17:12:39 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/06 17:02:50 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 
 #include <iostream>
 #include <stdexcept>
+#include "AForm.hpp"
 
 // ========================================================
 // Class definition
 // ========================================================
 
-class Form;
+class AForm;
 
 class Bureaucrat {
 	public:
@@ -39,7 +40,7 @@ class Bureaucrat {
 		// Methods
 		void				incrementGrade();
 		void				decrementGrade();
-		void				signForm(Form& form) const;
+		void				signForm(AForm& form) const;
 
 		// Exceptions
 		class GradeTooHighException : public std::exception {
@@ -63,6 +64,10 @@ class Bureaucrat {
 		void 				_validateGrade(int grade) const;
 };
 
+
+// ========================================================
+// Stream output
+// ========================================================
 
 // ========================================================
 // Stream output

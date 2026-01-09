@@ -6,18 +6,17 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 12:55:52 by capapes           #+#    #+#             */
-/*   Updated: 2025/12/05 10:47:00 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/06 16:36:16 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
 
-Bureaucrat::Bureaucrat(const std::string &name, int grade)
-	: _name(name), _grade(grade) {
-		_validateGrade(grade);
-	}
+// ========================================================
+// Orthodox canonical form
+// ========================================================
 
-Bureaucrat::~Bureaucrat() {}
+Bureaucrat::Bureaucrat() : _name("Default"), _grade(150) {}
 
 Bureaucrat::Bureaucrat(const Bureaucrat &other)
 	: _name(other._name), _grade(other._grade) {}
@@ -29,6 +28,23 @@ Bureaucrat &Bureaucrat::operator=(const Bureaucrat &other) {
 	return *this;
 }
 
+Bureaucrat::~Bureaucrat() {}
+
+
+// ========================================================
+// Specific constructor
+// ========================================================
+
+Bureaucrat::Bureaucrat(const std::string &name, int grade)
+	: _name(name), _grade(grade) {
+	_validateGrade(grade);
+}
+
+
+// ========================================================
+// Getters
+// ========================================================
+
 const std::string &Bureaucrat::getName() const {
 	return _name;
 }
@@ -37,13 +53,10 @@ int Bureaucrat::getGrade() const {
 	return _grade;
 }
 
-void Bureaucrat::_validateGrade(int grade) const {
-	if (grade < _minGrade) {
-		throw GradeTooHighException();
-	} else if (grade > _maxGrade) {
-		throw GradeTooLowException();
-	}
-}
+
+// ========================================================
+// Methods
+// ========================================================
 
 void Bureaucrat::incrementGrade() {
 	_validateGrade(_grade - 1);
@@ -55,12 +68,39 @@ void Bureaucrat::decrementGrade() {
 	++_grade;
 }
 
-const char *Bureaucrat::GradeTooHighException::what() const throw()
-{
+
+// ========================================================
+// Exceptions
+// ========================================================
+
+const char *Bureaucrat::GradeTooHighException::what() const throw() {
     return "Grade too high!";
 }
 
-const char *Bureaucrat::GradeTooLowException::what() const throw()
-{
+const char *Bureaucrat::GradeTooLowException::what() const throw() {
     return "Grade too low!";
+}
+
+
+// ========================================================
+// Pivate methods
+// ========================================================
+
+void Bureaucrat::_validateGrade(int grade) const {
+	if (grade < _minGrade) {
+		throw GradeTooHighException();
+	} else if (grade > _maxGrade) {
+		throw GradeTooLowException();
+	}
+}
+
+
+// ========================================================
+// Stream output
+// ========================================================
+
+std::ostream &operator<<(std::ostream &os, const Bureaucrat &bureaucrat)
+{
+	os << bureaucrat.getName() << ", bureaucrat grade " << bureaucrat.getGrade();
+	return os;
 }
