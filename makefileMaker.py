@@ -20,7 +20,7 @@ if not TARGET.endswith("/"):
 
 PROJECT_NAME = os.path.basename(os.path.abspath(TARGET))
 
-CXX = "g++"
+CXX = "c++"
 CXXFLAGS = "-Wall -Wextra -Werror -std=c++98 -MMD -g"
 
 BIN_DIR = "bin/"
