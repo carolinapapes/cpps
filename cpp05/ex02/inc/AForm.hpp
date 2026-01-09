@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 15:43:54 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/05 20:57:27 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/06 16:37:38 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,50 +15,61 @@
 #include <stdexcept>
 #include "Bureaucrat.hpp"
 
+// ========================================================
+// Class definition
+// ========================================================
+
 class Bureaucrat;
 
 class AForm
 {
-private:
-    const std::string _name;
-    bool              _isSigned;
-    const int         _gradeToSign;
-    const int         _gradeToExecute;
-
-protected:
-    class GradeTooHighException : public std::exception {
     public:
-        virtual const char* what() const throw();
-    };
+        // Orthodox Canonical Form
+        AForm();
+        AForm(const AForm& other);
+        AForm& operator=(const AForm& other);
+        virtual ~AForm();
 
-    class GradeTooLowException : public std::exception {
-    public:
-        virtual const char* what() const throw();
-    };
+        // Specific Constructor
+        AForm(std::string name, int gradeToSign, int gradeToExecute);
 
-public:
-    // Orthodox Canonical Form
-    AForm();
-    AForm(const AForm& other);
-    AForm& operator=(const AForm& other);
-    virtual ~AForm();
+        // Getters
+        const std::string& getName() const;
+        int                getGradeToSign() const;
+        int                getGradeToExecute() const;
+        bool               getIsSigned() const;
 
-    // Constructor
-    AForm(std::string name, int gradeToSign, int gradeToExecute);
+        // Methods
+        void beSigned(const Bureaucrat& bureaucrat);
+        void execute(const Bureaucrat& executor) const;
 
-    // Getters
-    const std::string& getName() const;
-    int                getGradeToSign() const;
-    int                getGradeToExecute() const;
-    bool               getIsSigned() const;
 
-    // Actions
-    void beSigned(const Bureaucrat& bureaucrat);
-    void execute(const Bureaucrat& executor) const;
+    protected:
+        // Exceptions
+        class GradeTooHighException : public std::exception {
+        public:
+            virtual const char* what() const throw();
+        };
 
-protected:
-    virtual void performAction() const = 0;
+        class GradeTooLowException : public std::exception {
+        public:
+            virtual const char* what() const throw();
+        };
+
+        // Virtual methods
+        virtual void performAction() const = 0;
+
+    private:
+        // Attributes
+        const std::string _name;
+        bool              _isSigned;
+        const int         _gradeToSign;
+        const int         _gradeToExecute;
 };
 
+
+// ========================================================
 // Stream output
+// ========================================================
+
 std::ostream& operator<<(std::ostream& os, const AForm& form);

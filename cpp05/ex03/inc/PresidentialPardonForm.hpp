@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 17:59:04 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/05 20:52:45 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/06 16:52:16 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,24 @@
 #include <string>
 
 class PresidentialPardonForm : public AForm {
-private:
-    enum {
-        _signGrade = 25,
-        _executeGrade = 5
-    };
+    public:
+        // Orthodox Canonical Form
+        PresidentialPardonForm();
+        PresidentialPardonForm(const PresidentialPardonForm& other);
+        PresidentialPardonForm& operator=(const PresidentialPardonForm& other);
+        ~PresidentialPardonForm();
 
-    std::string _target;
+        // Specific constructor
+        PresidentialPardonForm(const std::string& target);
 
-public:
-    // Orthodox Canonical Form
-    PresidentialPardonForm();
-    PresidentialPardonForm(const PresidentialPardonForm& other);
-    PresidentialPardonForm& operator=(const PresidentialPardonForm& other);
-    ~PresidentialPardonForm();
+        // Virtual Methods
+        void performAction() const;
 
-    // Specific constructor
-    PresidentialPardonForm(const std::string& target);
-
-    // Methods
-    void performAction() const;
+    private:
+        // Attributes
+        enum {
+            _signGrade = 25,
+            _executeGrade = 5
+        };
+        std::string _target;
 };

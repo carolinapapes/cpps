@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 18:01:29 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/05 20:49:16 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/06 17:11:28 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,25 @@
 #include "AForm.hpp"
 
 class ShrubberyCreationForm : public AForm {
-private:
-    const int _signGrade = 145;
-    const int _executeGrade = 137;
+    public:
+        // Orthodox Canonical Form
+        ShrubberyCreationForm();
+        ShrubberyCreationForm(const ShrubberyCreationForm& other);
+        ShrubberyCreationForm& operator=(const ShrubberyCreationForm& other);
+        ~ShrubberyCreationForm();
 
-    std::string _target;
+        // Specific constructor
+        ShrubberyCreationForm(const std::string& target);
 
-public:
-    // Orthodox Canonical Form
-    ShrubberyCreationForm();
-    ShrubberyCreationForm(const ShrubberyCreationForm& other);
-    ShrubberyCreationForm& operator=(const ShrubberyCreationForm& other);
-    ~ShrubberyCreationForm();
+        // Virtual Methods
+        void performAction() const;
 
-    // Specific constructor
-    ShrubberyCreationForm(const std::string& target);
+    private:
+        // Attributes
+        enum {
+            _signGrade = 145,
+            _executeGrade = 137
+        };
+        std::string _target;
 
-    // Methods
-    void performAction() const;
 };

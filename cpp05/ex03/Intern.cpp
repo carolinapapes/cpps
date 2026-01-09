@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 18:26:48 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/05 21:06:28 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/06 17:10:48 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,49 +24,45 @@
 #define PRESIDENTIAL_PARDON_FORM "presidential pardon"
 #define FORM_COUNT 3
 
-// Creator functions (C++98)
-static AForm* createShrubbery(const std::string& target)
-{
+
+// ========================================================
+// Form creator
+// ========================================================
+static AForm* createShrubbery(const std::string& target) {
     return new ShrubberyCreationForm(target);
 }
 
-static AForm* createRobotomy(const std::string& target)
-{
+static AForm* createRobotomy(const std::string& target) {
     return new RobotomyRequestForm(target);
 }
 
-static AForm* createPresidential(const std::string& target)
-{
+static AForm* createPresidential(const std::string& target) {
     return new PresidentialPardonForm(target);
 }
 
-// Orthodox Canonical Form
+// ========================================================
+// Orthodox canonical form
+// ========================================================
 
-Intern::Intern()
-{
-}
+Intern::Intern() {}
 
-Intern::Intern(const Intern& other)
-{
+Intern::Intern(const Intern& other) {
     (void)other;
 }
 
-Intern& Intern::operator=(const Intern& other)
-{
+Intern& Intern::operator=(const Intern& other) {
     if (this != &other) {
-        // Intern has no data members to copy
     }
     return *this;
 }
 
-Intern::~Intern()
-{
-}
+Intern::~Intern() {}
 
-// Method
+// ========================================================
+// Methods
+// ========================================================
 
-AForm* Intern::makeForm(const std::string& formName, const std::string& target) const
-{
+AForm* Intern::makeForm(const std::string& formName, const std::string& target) const {
     static const char* formNames[FORM_COUNT] = {
         SHRUBBERY_CREATION_FORM,
         ROBOTOMY_REQUEST_FORM,

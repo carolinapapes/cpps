@@ -6,41 +6,51 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 12:51:24 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/05 18:37:24 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/06 16:37:18 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-
 #include <iostream>
 #include <stdexcept>
+
+
+// ========================================================
+// Class definition
+// ========================================================
 
 class Bureaucrat {
 	public:
 		// Orthodox canonical form
 		Bureaucrat();
-		~Bureaucrat();
 		Bureaucrat(const Bureaucrat &other);
 		Bureaucrat &operator=(const Bureaucrat &other);
+		~Bureaucrat();
 
+		// Specific constructor
 		Bureaucrat(const std::string &name, int grade);	
-	
-		// Methods
+
+		// Getters
 		const std::string 	&getName() const;
 		int 				getGrade() const;
+
+		// Methods
 		void				incrementGrade();
 		void				decrementGrade();
 
+		// Exceptions
 		class GradeTooHighException : public std::exception {
 			public:
 				virtual const char* what() const throw();
 		};
+
 		class GradeTooLowException : public std::exception {
 			public:
 				virtual const char* what() const throw();
 		};
 
 	private:
+		// Attributes
 		const std::string 	_name;
 		int 				_grade;
 		static const int 	_minGrade = 1;
@@ -50,7 +60,9 @@ class Bureaucrat {
 		void 				_validateGrade(int grade) const;
 };
 
-inline std::ostream &operator<<(std::ostream &os, const Bureaucrat &bureaucrat) {
-	os << bureaucrat.getName() << ", bureaucrat grade " << bureaucrat.getGrade();
-	return os;
-}
+
+// ========================================================
+// Stream output
+// ========================================================
+
+std::ostream &operator<<(std::ostream &os, const Bureaucrat &bureaucrat);

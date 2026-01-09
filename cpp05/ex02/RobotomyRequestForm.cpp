@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 18:06:08 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/05 20:51:45 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/06 16:54:20 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,19 @@
 #include <cstdlib>
 #include <ctime>
 
+// ========================================================
+// Orthodox canonical form
+// ========================================================
+
 RobotomyRequestForm::RobotomyRequestForm()
     : AForm("RobotomyRequestForm", _signGrade, _executeGrade)
-    , _target("default")
-{
-}
-
-RobotomyRequestForm::RobotomyRequestForm(const std::string& target)
-    : AForm("RobotomyRequestForm", _signGrade, _executeGrade)
-    , _target(target)
-{
-}
+    , _target("default") {}
 
 RobotomyRequestForm::RobotomyRequestForm(const RobotomyRequestForm& other)
     : AForm(other)
-    , _target(other._target)
-{
-}
+    , _target(other._target) {}
 
-RobotomyRequestForm& RobotomyRequestForm::operator=(const RobotomyRequestForm& other)
-{
+RobotomyRequestForm& RobotomyRequestForm::operator=(const RobotomyRequestForm& other){
     if (this != &other) {
        	AForm::operator=(other);
         _target = other._target;
@@ -42,21 +35,21 @@ RobotomyRequestForm& RobotomyRequestForm::operator=(const RobotomyRequestForm& o
     return *this;
 }
 
-RobotomyRequestForm::~RobotomyRequestForm()
-{
-}
+RobotomyRequestForm::~RobotomyRequestForm() {}
 
-void RobotomyRequestForm::_seedOnce()
-{
-    static bool seeded = false;
-    if (!seeded) {
-        std::srand(std::time(NULL));
-        seeded = true;
-    }
-}
+// ========================================================
+// Specific constructor
+// ========================================================
 
-void RobotomyRequestForm::performAction() const
-{
+RobotomyRequestForm::RobotomyRequestForm(const std::string& target)
+    : AForm("RobotomyRequestForm", _signGrade, _executeGrade)
+    , _target(target) {}
+
+
+// ========================================================
+// Virtual methods
+// ========================================================
+void RobotomyRequestForm::performAction() const {
     _seedOnce();
 
     std::cout << "Brrrr... Bzzzz... Vrrrr..." << std::endl;
@@ -65,5 +58,17 @@ void RobotomyRequestForm::performAction() const
         std::cout << _target << " has been robotomized successfully." << std::endl;
     } else {
         std::cout << "Robotomy failed on " << _target << "." << std::endl;
+    }
+}
+
+// ========================================================
+// Private Methods
+// ========================================================
+void RobotomyRequestForm::_seedOnce() {
+    static bool seeded = false;
+
+    if (!seeded) {
+        std::srand(std::time(NULL));
+        seeded = true;
     }
 }
