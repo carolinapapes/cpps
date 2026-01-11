@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 17:18:26 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/11 22:03:57 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/12 00:57:53 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ double BitcoinExchange::getRateForDateOrClosestLower(const std::string& date) co
 }
 
 void BitcoinExchange::errMessage(eMessageType type, const std::string& line) const
-{
+{	
 	switch (type)
 	{
 		case ERR_TOO_LARGE:
@@ -138,7 +138,7 @@ eMessageType BitcoinExchange::checkLine(const std::string& line,
 	const std::string dateToken  = trim(line.substr(0, pos));
 	const std::string valueToken = trim(line.substr(pos + 1));
 
-	if (!isValidDate(dateToken, date) || !parseValue(valueToken, value))
+	if (!isValidDate(dateToken, date) ||!parseValue(valueToken, value))
 		return ERR;
 
 	if (!isDB && value < 0.0)
@@ -156,9 +156,9 @@ void BitcoinExchange::processLine(const std::string& line, bool isDB)
 	double value;
 
 	const eMessageType err = checkLine(line, isDB, date, value);
-	if (err != ERR_NONE)
+	if (err)
 	{
-		errMessage(ERR, line);
+		errMessage(err, line);
 		return ;
 	}
 
