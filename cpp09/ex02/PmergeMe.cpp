@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 11:33:38 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/12 14:46:15 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/12 20:05:11 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ void PmergeMe::printSequence(const std::string& label, const std::deque< MultiLe
 	std::cout << label;
 	const size_t limit = 20;
 	for (size_t i = 0; i < d.size() && i < limit; ++i)
-			std::cout <<  d[i].lead << std::endl;
+			std::cout <<  d[i].lead;
 	if (d.size() > limit) std::cout << " [...]";
-	std::cout << std::endl;
+	std::cout << "\n" << std::endl;
 }
 
 // ------------------------------------------------------------------------------------- 
@@ -88,16 +88,16 @@ void PmergeMe::parseArgs(int ac, char** av) {
 // ------------------------------------------------------------------------------------- 
 
 // Jacobsthal numbers: J(0)=0, J(1)=1, J(n)=J(n-1)+2*J(n-2)
-// static size_t jacob(size_t n) {
-// 	if (n == 0) return 0;
-// 	if (n == 1) return 1;
-// 	size_t a = 0, b = 1;
-// 	for (size_t i = 2; i <= n; ++i) {
-// 		size_t c = b + 2 * a;
-// 		a = b; b = c;
-// 	}
-// 	return b;
-// }
+static size_t jacob(size_t n) {
+	if (n == 0) return 0;
+	if (n == 1) return 1;
+	size_t a = 0, b = 1;
+	for (size_t i = 2; i <= n; ++i) {
+		size_t c = b + 2 * a;
+		a = b; b = c;
+	}
+	return b;
+}
 
 
 size_t PmergeMe::lowerBoundDeq(const std::deque<int>& a, int x) {
@@ -138,32 +138,40 @@ void PmergeMe::mergeSortPairsDeqRec(std::deque< std::pair<int,int> >& a,
 	mergePairsDeq(a, tmp, l, m, r);
 }
 
-void PmergeMe::mergeSortPairsDeq(std::deque< std::pair<int,int> >& a) {
+void PmergeMe::mergeSortPairsDeq(std::deque< MultiLevelPairs> >& a) {
 	std::deque< std::pair<int,int> > tmp;
 	tmp.resize(a.size());
 	mergeSortPairsDeqRec(a, tmp, 0, (int)a.size());
 }
 
-#define GRAY  "\033[90m"
+#define GRAY "\033[90m"
 #define BOLD  "\033[1m"
 #define RESET "\033[0m"
 
-void printNodeBracket(const MultiLevelPairs& node, bool isLead)
+void printNodeBracket(const MultiLevelPairs& node, bool isLead, int level)
 {
-    if (node.levels.empty())
-    {
-		isLead ?
-        std::cout << BOLD << node.lead << RESET :
-		std::cout << GRAY << node.lead << RESET;
-        return;
-    }
-    std::cout << "[ ";
-    printNodeBracket(node.levels[0], isLead && false);
-    std::cout << " | ";
-    printNodeBracket(node.levels[1], isLead && true);
-    std::cout << " ]";
+	if (node.levels.empty()) 
+	{ 
+		isLead 
+			? std::cout << RESET << BOLD << node.lead << RESET << GRAY
+			: std::cout << node.lead ;
+		return; 
+	}
+	
+	level == 0 
+		? std::cout << RESET << BOLD << " [" << RESET << GRAY
+		: std::cout << "["; 
+	
+	printNodeBracket(node.levels[0], isLead && false, level + 1);
+	if (node.levels[0].levels.empty()) std::cout << "|" ;
+	printNodeBracket(node.levels[1], isLead && true, level + 1);
+
+	level == 0 
+		? std::cout << RESET << BOLD << "] " 
+		: std::cout << "]"; 
 }
-bool makePairsOnce(const std::deque<MultiLevelPairs>& input,
+
+void makePairsOnce(const std::deque<MultiLevelPairs>& input,
                    std::deque<MultiLevelPairs>& pairs,
                    MultiLevelPairs& stray)
 {
@@ -171,58 +179,69 @@ bool makePairsOnce(const std::deque<MultiLevelPairs>& input,
 
     for (size_t i = 0; i + 1 < input.size(); i += 2)
     {
-        const MultiLevelPairs& left  = input[i];
-        const MultiLevelPairs& right = input[i + 1];
+        const MultiLevelPairs& a = input[i];
+		const MultiLevelPairs& b = input[i + 1];
 
-        MultiLevelPairs next;
-        if (left.lead <= right.lead) {
-            next.levels.push_back(left);
-            next.levels.push_back(right);
-        } else {
-            next.levels.push_back(right);
-            next.levels.push_back(left);
-        }
-        next.lead = next.levels.back().lead;
+		MultiLevelPairs next;
+		next.levels.push_back(a.lead <= b.lead ? a : b);
+		next.levels.push_back(a.lead <= b.lead ? b : a);
+		next.lead = next.levels.back().lead;
 
-        pairs.push_back(next);
+		pairs.push_back(next);
     }
-	for (size_t i = 0; i < pairs.size(); i++)
-			printNodeBracket(pairs[i], true);
 
     if (input.size() % 2 == 1) {
-        stray = input.back();
-		printNodeBracket(stray, true);
-		std::cout << std::endl;
-        return true;
+        stray.levels.push_front(input.back());
     }
-	std::cout << std::endl;
-    return false;
+
 }
 
 
 MultiLevelPairs buildPairTree(std::deque<MultiLevelPairs> nodes)
 {
+	std::deque<MultiLevelPairs> paired;
+	MultiLevelPairs stray;
     if (nodes.empty())
         return MultiLevelPairs();
+	
+	int size = nodes.size();
+	int level = 0;
 
     while (nodes.size() > 1)
     {
-        std::deque<MultiLevelPairs> paired;
-        MultiLevelPairs stray;
+        makePairsOnce(nodes, paired, stray);
 
-        bool hasStray = makePairsOnce(nodes, paired, stray);
-        if (hasStray)
-            paired.push_back(stray);
-
-        if (paired.size() >= nodes.size()) {
-            std::cerr << "Error: pairing did not reduce size ("
-                      << nodes.size() << " -> " << paired.size() << ")\n";
-            break;
-        }
+		for (size_t i = 0; i < paired.size(); i++)
+			printNodeBracket(paired[i], true, 0);
+		std::cout << "\tstray ";
+		printNodeBracket(stray, true, 0);
+		std::cout << "\n" << std::endl;
 
         nodes.swap(paired);
+		level++;
     }
-	
+
+	if (!stray.levels.empty())
+		nodes.push_back(stray);
+
+
+	std::cout << "Nodes ";
+	for (size_t i = 0; i < nodes.size(); i++)
+			printNodeBracket(nodes[i], true, 0);
+	std::cout << std::endl;
+
+	while (level >= 0)
+	{
+		// nodes. take nodes - nodes % 2;
+		// make two containers, one containing first node + all the other leads
+		// the other the pending ones from the pairs;
+		// binary search algorithm on our main, which is a sorted sequence, to find a place for insertion for our pend elements
+		// selection of the pend element to insert from Jacobsthal numbers.
+		// insert from that num to the smaller one then again until no more levels;
+
+
+	}
+
     return nodes.front();
 }
 
@@ -236,7 +255,7 @@ std::deque<MultiLevelPairs> PmergeMe::fordJohnsonDeque(const std::deque< MultiLe
 	MultiLevelPairs root = buildPairTree(input);
 
 	// // 2) sort pairs by max
-	// mergeSortPairsDeq(pairs);
+	mergeSortPairsDeq(root);
 
 	// // 3) main chain = sorted maxes, pending = mins in that order
 	std::deque<MultiLevelPairs> mainc;
