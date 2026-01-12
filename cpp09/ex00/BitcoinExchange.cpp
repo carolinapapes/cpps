@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 17:18:26 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/12 00:57:53 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/12 01:07:53 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ void BitcoinExchange::processLine(const std::string& line, bool isDB)
 	if (isDB)
 	{
 		_rates[date] = value;
-		return;
+		return ;
 	}
 
 	try {
