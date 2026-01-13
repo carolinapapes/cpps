@@ -38,7 +38,7 @@ dep_files = [f"{BIN_DIR}{f.replace('.cpp', '.d')}" for f in cpp_files]
 # Build Makefile content
 # -------------------------------------------
 makefile_content = f"""
-# Auto-generated Makefile for folder: {TARGET}
+# Auto-generated capapes Makefile for folder: {TARGET}
 
 BIN_DIR = {BIN_DIR}
 INC_DIR = {INC_DIR}

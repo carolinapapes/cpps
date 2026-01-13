@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 11:34:01 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/12 13:14:47 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/13 20:04:13 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,16 @@
 #include <deque>
 #include <string>
 
-struct MultiLevelPairs{
-    std::deque<MultiLevelPairs> levels;
+struct MultiLevelPairsDq{
+    std::deque<MultiLevelPairsDq> levels;
     int lead;
+	int level;
+};
+
+struct MultiLevelPairsVc{
+    std::vector<MultiLevelPairsVc> levels;
+    int lead;
+	int level;
 };
 
 class PmergeMe {
@@ -32,27 +39,18 @@ public:
 	void run(int ac, char** av);
 
 private:
-	std::deque<MultiLevelPairs>  _deq;
+	std::deque<MultiLevelPairsDq>  _deq;
+	std::vector<MultiLevelPairsVc> _vec;
 
-	// parsing / printing
-	void parseArgs(int ac, char** av);
 	static bool isPositiveIntToken(const std::string& s);
 	static long toLong(const std::string& s);
-	static void printSequence(	const std::string& label,
-								const std::deque< MultiLevelPairs>& d);
-
+	void parseArgs(int ac, char** av);
+	
 	// timing
 	static double nowMicros();
 
 	// Ford–Johnson for deque
-	static std::deque<MultiLevelPairs>fordJohnsonDeque(const std::deque< MultiLevelPairs>& input);
-	static void mergeSortPairsDeq(std::deque< std::pair<int,int> >& a);
-	static void mergePairsDeq(std::deque< std::pair<int,int> >& a,
-	                          std::deque< std::pair<int,int> >& tmp,
-	                          int l, int m, int r);
-	static void mergeSortPairsDeqRec(std::deque< std::pair<int,int> >& a,
-	                                std::deque< std::pair<int,int> >& tmp,
-	                                int l, int r);
-	static size_t lowerBoundDeq(const std::deque<int>& a, int x);
+	static std::deque<MultiLevelPairsDq>fordJohnsonDeque(std::deque< MultiLevelPairsDq> input);
+	static std::vector< MultiLevelPairsVc>fordJohnsonVector(std::vector<MultiLevelPairsVc> nodes);
 };
 
