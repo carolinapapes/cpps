@@ -1,19 +1,16 @@
 
-# Auto-generated capapes Makefile for folder: cpp09/ex02/
+# Auto-generated capapes Makefile for folder: ./cpp09/ex00/
 
 BIN_DIR = bin/
 INC_DIR = inc/
 
 CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -MMD -fsanitize=address -g
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -MMD -g
 
-NAME = ex02
+NAME = btc
 
-OBJ = bin/main.o bin/PmergeMe.o
-DEP = bin/main.d bin/PmergeMe.d
-
-VERBOSE ?= 0
-CXXFLAGS += -DVERBOSE=$(VERBOSE)
+OBJ = bin/main.o bin/BitcoinExchange.o
+DEP = bin/main.d bin/BitcoinExchange.d
 
 all: $(BIN_DIR) $(NAME)
 

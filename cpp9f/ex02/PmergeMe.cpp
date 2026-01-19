@@ -6,7 +6,7 @@
 /*   By: capapes <capapes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 11:33:38 by capapes           #+#    #+#             */
-/*   Updated: 2026/01/14 12:46:58 by capapes          ###   ########.fr       */
+/*   Updated: 2026/01/14 18:52:42 by capapes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void printSequence(const std::string& label, const std::deque< MultiLevelPairsDq
 
 void printSequenceV(const std::string& label, const std::vector< MultiLevelPairsVc>& d) {
 	std::cout << label;
-	const size_t limit = 20;
+	const size_t limit = 21;
 	for (size_t i = 0; i < d.size() && i < limit; ++i)
 			std::cout <<  d[i].lead << " ";
 	if (d.size() > limit) std::cout << " [...]";
@@ -508,19 +508,19 @@ void PmergeMe::run(int ac, char** av)
 	// VECTOR
 	std::vector<MultiLevelPairsVc> sortedV = fordJohnsonVector(_vec);
 
+		std::cout << RESET <<BOLD;
+		comparisionCount(1);
 	if (VERBOSE)
 	{
-		std::cout << RESET <<BOLD;
 		std::cout << "E" << maxComparations(ac-1) << std::endl;
 		std::cout << "B QTY\t" << _deq.size() << std::endl;
 		std::cout << "E QTY\t" << sortedD.size() << std::endl;
 		std::cout << "\n" << std::endl;
 		std::cout << RESET;
 	}
-	// printSequence("Before dq: ", _deq);
-		comparisionCount(1);
+	printSequence("Before dq: ", _deq);
 	printSequence("After dq:  ", sortedD);
-	// printSequenceV("Before vc: ", _vec);
-	// printSequenceV("After vc:  ", sortedV);
+	printSequenceV("Before vc: ", _vec);
+	printSequenceV("After vc:  ", sortedV);
 }
 

@@ -7,7 +7,7 @@ INC_DIR = inc/
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -MMD -fsanitize=address -g
 
-NAME = ex02
+NAME = PmergeMe
 
 OBJ = bin/main.o bin/PmergeMe.o
 DEP = bin/main.d bin/PmergeMe.d
